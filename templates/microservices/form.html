@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ 'Editar' if item else 'Crear' }} microservicio</h2>
+
+  <form method="post">
+    <label>Nombre
+      <input type="text" name="name" required value="{{ item.name if item else '' }}">
+    </label>
+
+    <label>Código (único)
+      <input type="text" name="code" required value="{{ item.code if item else '' }}">
+    </label>
+
+    <label>Processing Type
+      <select name="processing_type" required>
+        {% for t in processing_types %}
+          <option value="{{ t }}" {% if item and item.processing_type==t %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>BasePath
+      <input type="text" name="base_path" value="{{ item.base_path if item else '' }}" placeholder="/svc/mi-codigo">
+    </label>
+
+    <label>SampleParamsJson
+      <textarea name="sample_params_json" rows="5" placeholder='{"key":"value"}'>{{ item.sample_params_json if item else '' }}</textarea>
+    </label>
+
+    <label>RobleToken
+      <input type="text" name="roble_token" value="{{ item.roble_token if item else '' }}">
+    </label>
+
+    <label>
+      <input type="checkbox" name="enabled" {% if (item and item.enabled) or (not item) %}checked{% endif %}>
+      Habilitado
+    </label>
+
+    <div>
+      <button type="submit">Guardar</button>
+      <a role="button" class="secondary" href="{{ url_for('list_microservices') }}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}
