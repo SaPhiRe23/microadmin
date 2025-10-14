@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
-import './App.css';
+import api from "../services/api";
 
-
-export default function MicroserviceForm({ onSubmit, editing }) {
-  const [form, setForm] = useState({
-    nombre: "",
-    tipo: "",
-    url: "",
-  });
+export default function MicroserviceForm({ editing }) {
+  const [form, setForm] = useState({ nombre: "", tipo: "", url: "" });
+  const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
     if (editing) setForm(editing);
   }, [editing]);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(form);
-    setForm({ nombre: "", tipo: "", url: "" });
+    try {
+      await api.post("/microservicios", form);
+      setMensaje("✅ Microservicio creado correctamente");
+      setForm({ nombre: "", tipo: "", url: "" });
+    } catch {
+      setMensaje("❌ Error al crear microservicio");
+    }
   };
 
   return (
@@ -58,6 +58,7 @@ export default function MicroserviceForm({ onSubmit, editing }) {
           {editing ? "Guardar Cambios" : "Crear"}
         </button>
       </form>
+      {mensaje && <p className="mt-3">{mensaje}</p>}
     </div>
   );
 }

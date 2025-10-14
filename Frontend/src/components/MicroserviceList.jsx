@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "./services/api";
-import './App.css';
+import api from "../services/api";
 
-export default function ListarMicroservicios() {
+export default function MicroserviceList() {
   const [lista, setLista] = useState([]);
 
   const obtenerMicroservicios = async () => {
@@ -20,10 +19,10 @@ export default function ListarMicroservicios() {
   };
 
   return (
-    <>
-      <h2>Microservicios registrados</h2>
-      <table className="table">
-        <thead>
+    <div>
+      <h3>Microservicios registrados</h3>
+      <table className="table table-striped mt-3">
+        <thead className="table-primary">
           <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -40,12 +39,17 @@ export default function ListarMicroservicios() {
               <td>{m.tipo}</td>
               <td>{m.url}</td>
               <td>
-                <button onClick={() => eliminar(m.id)}>🗑️ Eliminar</button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => eliminar(m.id)}
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
