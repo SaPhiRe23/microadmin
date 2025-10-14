@@ -99,10 +99,25 @@ def eliminar_microservicio(id):
 def probar_endpoint():
     data = request.get_json()
     try:
-        response = requests.get(data["url"]) if data["metodo"] == "GET" else requests.post(data["url"], json=data.get("body", {}))
-        return jsonify({"codigo": response.status_code, "respuesta": response.json()})
+        if data["metodo"] == "GET":
+            response = requests.get(data["url"])
+        else:
+            response = requests.post(data["url"], json=data.get("body", {}))
+
+        # Intenta parsear como JSON, si no se puede, devuelve texto plano
+        try:
+            contenido = response.json()
+        except ValueError:
+            contenido = response.text
+
+        return jsonify({
+            "codigo": response.status_code,
+            "respuesta": contenido
+        })
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 # =========================

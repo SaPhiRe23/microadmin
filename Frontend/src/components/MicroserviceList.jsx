@@ -1,10 +1,30 @@
-export default function MicroserviceList({ services, onEdit, onDelete }) {
+import React, { useEffect, useState } from "react";
+import api from "./services/api";
+
+export default function ListarMicroservicios() {
+  const [lista, setLista] = useState([]);
+
+  const obtenerMicroservicios = async () => {
+    const res = await api.get("/microservicios");
+    setLista(res.data);
+  };
+
+  useEffect(() => {
+    obtenerMicroservicios();
+  }, []);
+
+  const eliminar = async (id) => {
+    await api.delete(`/microservicios/${id}`);
+    obtenerMicroservicios();
+  };
+
   return (
-    <div className="container mt-3">
-      <h3>Microservicios Registrados</h3>
-      <table className="table table-striped mt-3">
+    <>
+      <h2>Microservicios registrados</h2>
+      <table className="table">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Tipo</th>
             <th>URL</th>
@@ -12,29 +32,19 @@ export default function MicroserviceList({ services, onEdit, onDelete }) {
           </tr>
         </thead>
         <tbody>
-          {services.map((s) => (
-            <tr key={s.id}>
-              <td>{s.nombre}</td>
-              <td>{s.tipo}</td>
-              <td>{s.url}</td>
+          {lista.map((m) => (
+            <tr key={m.id}>
+              <td>{m.id}</td>
+              <td>{m.nombre}</td>
+              <td>{m.tipo}</td>
+              <td>{m.url}</td>
               <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => onEdit(s)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => onDelete(s.id)}
-                >
-                  Eliminar
-                </button>
+                <button onClick={() => eliminar(m.id)}>🗑️ Eliminar</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
