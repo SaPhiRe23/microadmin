@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 import api from "./services/api";
 
 export default function CrearMicroservicio() {
