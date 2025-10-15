@@ -3,6 +3,7 @@ from flask_cors import CORS
 import requests
 import os
 import json
+import docker
 import tempfile, shutil
 
 from errors import register_error_handlers, APIError
@@ -55,11 +56,27 @@ def create_microservice():
     NEXT_ID += 1
     return jsonify(micro), 201
 
+
 @app.route("/api/microservicios/<int:mid>", methods=["DELETE"])
 def delete_microservice(mid):
     idx = next((i for i, m in enumerate(MICROS) if m["id"] == mid), None)
     if idx is None:
         raise APIError("Microservicio no encontrado", status_code=404)
+    micro = MICROS[idx]
+
+    # Intentar detener y eliminar el contenedor asociado
+    container_name = micro.get("container") or f"ms_{micro.get('nombre','')}"
+    try:
+        client = docker.from_env()
+        try:
+            cont = client.containers.get(container_name)
+            cont.remove(force=True)
+        except docker.errors.NotFound:
+            pass
+    except Exception:
+        # si no se puede acceder al socket docker, continuar
+        pass
+
     MICROS.pop(idx)
     return jsonify({"deleted": mid}), 200
 
@@ -153,6 +170,24 @@ def create_ms_from_code():
         return jsonify({"error": {"message": "No se pudo crear el microservicio", "detail": str(e)}}), 500
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+@app.get("/api/microservicios/<int:mid>/logs")
+def micro_logs(mid):
+    micro = next((m for m in MICROS if m["id"] == mid), None)
+    if not micro:
+        raise APIError("Microservicio no encontrado", status_code=404)
+    tail = int((request.args.get("tail") or 200))
+    container_name = micro.get("container") or f"ms_{micro.get('nombre','')}"
+    try:
+        client = docker.from_env()
+        cont = client.containers.get(container_name)
+        raw = cont.logs(tail=tail).decode("utf-8", "replace")
+        return jsonify({"container": container_name, "tail": tail, "logs": raw}), 200
+    except docker.errors.NotFound:
+        return jsonify({"error": {"message": "Contenedor no encontrado", "detail": container_name}}), 404
+    except Exception as e:
+        return jsonify({"error": {"message": "No se pudieron obtener logs", "detail": str(e)}}), 500
 
 # --- Raíz ---
 @app.route("/", methods=["GET"])

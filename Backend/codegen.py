@@ -2,10 +2,7 @@ import ast, textwrap, re, os
 from typing import Tuple
 
 FORBIDDEN_NAMES = {"__import__", "eval", "exec", "open", "compile", "input"}
-FORBIDDEN_NODES = {
-    ast.Import, ast.ImportFrom, ast.With, ast.AsyncFunctionDef,
-    ast.Lambda, ast.Global, ast.Nonlocal, ast.Try, ast.Raise, ast.ClassDef
-}
+FORBIDDEN_NODES = { ast.Import, ast.ImportFrom, ast.With, ast.AsyncFunctionDef, ast.Lambda, ast.Global, ast.Nonlocal, ast.ClassDef }
 
 TEMPLATE = """\
 from flask import Flask, jsonify, request
@@ -90,6 +87,7 @@ def validate_user_code(src: str) -> Tuple[bool, str]:
     if not has_run:
         return False, "Debe definir una función 'run(params, token)'."
     return True, ""
+
 
 def materialize_service(service_name: str, user_code: str, base_dir: str) -> str:
     service_dir = os.path.join(base_dir, service_name)

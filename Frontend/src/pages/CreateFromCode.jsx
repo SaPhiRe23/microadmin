@@ -29,7 +29,7 @@ export default function CreateFromCode() {
     } catch (e) {
       const msg = e?.response?.data?.error?.message || "Error creando el microservicio";
       const det = e?.response?.data?.error?.detail;
-      setError(det ? msg + \": \" + det : msg);
+      setError(det ? msg + ": " + det : msg);
     } finally {
       setLoading(false);
     }
