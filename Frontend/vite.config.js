@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   const isDocker = process.env.DOCKER === 'true';
 
-
-  const PLAY_WITH_DOCKER_BACKEND = 'ip172-18-0-26-d3s66egl2o90008a0in0-5000.direct.labs.play-with-docker.com';
+  // ⚠️ Cambia esta URL por la que te da PlayWithDocker para el backend (puerto 5000)
+  const PLAY_WITH_DOCKER_BACKEND = 'http://ip172-18-0-41-d3s4fhq91nsg008scmm0-5000.direct.labs.play-with-docker.com/api';
 
   return {
     plugins: [react()],
@@ -21,10 +21,10 @@ export default defineConfig(({ mode }) => {
     define: {
       __API_BASE_URL__: JSON.stringify(
         mode === 'development'
-          ? 'http://localhost:5000/api'
+          ? 'http://localhost:5000/api'           //local
           : isDocker
-          ? 'http://microservicio:5000/api'
-          : PLAY_WITH_DOCKER_BACKEND
+          ? 'http://microservicio:5000/api'       //dentro del compose
+          : PLAY_WITH_DOCKER_BACKEND              //acceso desde PlayWithDocker
       ),
     },
   };
