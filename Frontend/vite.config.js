@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       host: true,
       allowedHosts: [
-        "http://ip172-18-0-78-d3s7uqi91nsg008scsrg-5173.direct.labs.play-with-docker.com/",
+        "http://ip172-18-0-78-d3s7uqi91nsg008scsrg-5173.direct.labs.play-with-docker.com",
         "localhost",
         "0.0.0.0",
       ],
