@@ -2,23 +2,29 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  // Detecta si estamos dentro de Docker
   const isDocker = process.env.DOCKER === 'true';
+
+
+  const PLAY_WITH_DOCKER_BACKEND = 'http://ip172-18-0-41-d3s4fhq91nsg008scmm0-5000.direct.labs.play-with-docker.com/api';
 
   return {
     plugins: [react()],
     server: {
       port: 5173,
-      host: true, // Permite acceso desde fuera del contenedor
-      allowedHosts: ["all"], // 🔥 Permite cualquier dominio (necesario para PWD)
+      host: true,
+      allowedHosts: [
+        "ip172-18-0-41-d3s4fhq91nsg008scmm0-5173.direct.labs.play-with-docker.com",
+        "localhost",
+        "0.0.0.0",
+      ],
     },
     define: {
       __API_BASE_URL__: JSON.stringify(
         mode === 'development'
-          ? 'http://localhost:5000/api'        // Fuera de Docker (local)
+          ? 'http://localhost:5000/api'
           : isDocker
-          ? 'http://microservicio:5000/api'    // Dentro del docker-compose
-          : '/api'                             // Fallback genérico
+          ? 'http://microservicio:5000/api'
+          : PLAY_WITH_DOCKER_BACKEND
       ),
     },
   };
