@@ -1,0 +1,14 @@
+URL:
+http://microservicio_suma:5000/run
+
+Funcion:
+def run(params, token):
+    a = params.get("a", 0)
+    b = params.get("b", 0)
+    return {"resultado": a + b}
+
+Probar en endpoint:
+{
+  "a": 4,
+  "b": 7
+}
