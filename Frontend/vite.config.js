@@ -5,7 +5,7 @@ export default defineConfig(({ mode }) => {
   const isDocker = process.env.DOCKER === 'true';
 
 
-  const PLAY_WITH_DOCKER_BACKEND = 'http://ip172-18-0-41-d3s4fhq91nsg008scmm0-5000.direct.labs.play-with-docker.com/api';
+  const PLAY_WITH_DOCKER_BACKEND = 'ip172-18-0-26-d3s66egl2o90008a0in0-5000.direct.labs.play-with-docker.com';
 
   return {
     plugins: [react()],
