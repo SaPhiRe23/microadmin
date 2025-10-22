@@ -5,7 +5,7 @@ export default defineConfig(({ mode }) => {
   const isDocker = process.env.DOCKER === 'true';
 
   // ⚠️ Cambia esta URL por la que te da PlayWithDocker para el backend (puerto 5000)
-  const PLAY_WITH_DOCKER_BACKEND = 'http://ip172-18-0-XX-XXXXXX-5000.direct.labs.play-with-docker.com/api';
+  const PLAY_WITH_DOCKER_BACKEND = 'http://ip172-18-0-26-d3s66egl2o90008a0in0-5000.direct.labs.play-with-docker.com/api';
 
   return {
     plugins: [react()],
@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       host: true,
       allowedHosts: [
-        "'http://ip172-18-0-XX-XXXXXX-5173.direct.labs.play-with-docker.com/api'",
+        "ip172-18-0-26-d3s66egl2o90008a0in0-5173.direct.labs.play-with-docker.com",
         "localhost",
         "0.0.0.0",
       ],
