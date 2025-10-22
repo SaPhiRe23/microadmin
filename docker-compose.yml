@@ -1,6 +1,5 @@
-version: "3.8"
-
 services:
+
   microservicio:
     build: ./Backend
     container_name: micro3
@@ -10,11 +9,12 @@ services:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
       - PORT=5000
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - DOCKER_NETWORK=app-network
+      # 👇 clave para Windows + Docker Desktop
+      - DOCKER_HOST=http://host.docker.internal:2375
+      # Deja vacío para que los contenedores que cree usen port-mapping a localhost
+      - DOCKER_NETWORK=
     volumes:
       - ./Backend:/app
-      - /var/run/docker.sock:/var/run/docker.sock
     command: ["flask", "--app", "app", "run", "--host=0.0.0.0", "--port=5000"]
     networks:
       - app-network
